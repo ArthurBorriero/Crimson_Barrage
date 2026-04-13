@@ -1,6 +1,6 @@
 import { CANVAS, CONFIG, COLORS, SPRITES, SPRITE_SCALE } from './config.js';
 import { clamp } from './utils.js';
-import { getMoveDir, getTouch, consumeShoot } from './input.js';
+import { getMoveDir, getTouch, isShooting } from './input.js';
 import { playShoot } from './audio.js';
 
 export function createPlayer() {
@@ -39,7 +39,7 @@ export function updatePlayer(player, playerBullets, dt) {
   player.y = clamp(player.y, hh, CANVAS.H - hh);
 
   player.shootCooldown -= dt;
-  if (consumeShoot() && player.shootCooldown <= 0) {
+  if (isShooting() && player.shootCooldown <= 0) {
     playerBullets.push({ x: player.x, y: player.y - CONFIG.player.bulletOffsetY });
     playShoot();
     player.shootCooldown = CONFIG.player.shootCooldown;

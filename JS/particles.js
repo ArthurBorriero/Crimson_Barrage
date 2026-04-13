@@ -1,3 +1,5 @@
+// Esse código é que cria as partículas de explosão.
+
 import { CONFIG, COLORS } from './config.js';
 import { randomBetween } from './utils.js';
 

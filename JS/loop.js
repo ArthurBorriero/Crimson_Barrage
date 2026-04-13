@@ -50,7 +50,7 @@ export function renderGameOver(ctx, score, finalTime, elapsedTime) {
   ]);
 }
 
-export function renderPlaying(ctx, { player, playerBullets, enemyBullets, enemies, score, elapsedTime }) {
+export function renderPlaying(ctx, { player, playerBullets, enemyBullets, enemies, score, elapsedTime, playerAlive }) {
   const ui  = CONFIG.ui;
   const pbc = CONFIG.playerBullet;
   const ebc = CONFIG.enemyBullet;
@@ -65,7 +65,7 @@ export function renderPlaying(ctx, { player, playerBullets, enemyBullets, enemie
     ctx.fillRect(b.x - ebc.hitOffX, b.y - ebc.hitOffY, ebc.hitW, ebc.hitH);
   });
   renderEnemies(ctx, enemies);
-  renderPlayer(ctx, player);
+  if (playerAlive) renderPlayer(ctx, player);
   renderParticles(ctx);
 
   // HUD por último

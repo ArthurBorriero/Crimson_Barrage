@@ -31,6 +31,7 @@ let finalTime;
 let spawnCooldown;
 let enemySpeed;
 let gameOverTriggered;
+let playerAlive;
 
 function resetGame() {
   player            = createPlayer();
@@ -43,6 +44,7 @@ function resetGame() {
   spawnCooldown     = CONFIG.enemy.spawnInterval;
   enemySpeed        = CONFIG.enemy.baseSpeed;
   gameOverTriggered = false;
+  playerAlive       = true;
   resetParticles();
 }
 
@@ -106,7 +108,8 @@ function updateCollisions() {
 function triggerGameOver() {
   if (gameOverTriggered) return;
   gameOverTriggered = true;
-  finalTime = elapsedTime;
+  finalTime   = elapsedTime;
+  playerAlive = false;
   spawnParticles(player.x, player.y);
   playGameOver();
   setTimeout(() => { state = 'gameover'; }, CONFIG.ui.gameoverDelay * 1000);
@@ -150,7 +153,7 @@ function loop(timestamp) {
   lastTime = timestamp;
 
   update(dt);
-  render(ctx, state, { player, playerBullets, enemyBullets, enemies, score, elapsedTime, finalTime });
+  render(ctx, state, { player, playerBullets, enemyBullets, enemies, score, elapsedTime, finalTime, playerAlive });
 
   requestAnimationFrame(loop);
 }
