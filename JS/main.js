@@ -3,7 +3,7 @@ import { collides } from './utils.js';
 import { resumeAudio, playExplode, playGameOver } from './audio.js';
 import { initInput } from './input.js';
 import { createPlayer, updatePlayer } from './player.js';
-import { updateEnemies } from './enemies.js';
+import { updateEnemies, damageEnemy } from './enemies.js';
 import { spawnParticles, updateParticles, resetParticles } from './particles.js';
 import { render } from './loop.js';
 
@@ -72,10 +72,12 @@ function updateCollisions() {
         e.x - ew / 2, e.y - eh / 2, ew, eh
       )) {
         b.dead = true;
-        e.dead = true;
-        spawnParticles(e.x, e.y);
-        playExplode();
-        score += CONFIG.ui.scorePerKill;
+        if (damageEnemy(e)) {
+          e.dead = true;
+          spawnParticles(e.x, e.y);
+          playExplode();
+          score += e.scoreValue;
+        }
       }
     });
   });
@@ -118,10 +120,9 @@ function triggerGameOver() {
 // ── UPDATE BALAS ──
 function updateBullets(dt) {
   const pbSpd = CONFIG.playerBullet.speed;
-  const ebSpd = Math.max(CONFIG.enemy.bulletSpeed, enemySpeed * CONFIG.enemy.bulletSpeedMult);
 
   playerBullets.forEach(b => b.y -= pbSpd * dt);
-  enemyBullets.forEach(b  => b.y += ebSpd * dt);
+  enemyBullets.forEach(b  => b.y += b.speed * dt);
 
   playerBullets = playerBullets.filter(b => b.y > -10);
   enemyBullets  = enemyBullets.filter(b  => b.y < CANVAS.H + 10);

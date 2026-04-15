@@ -1,13 +1,13 @@
 // ── RESOLUÇÃO INTERNA ──
 export const CANVAS = {
-  W: 480,
-  H: 640,
+  W: 560,
+  H: 720,
 };
 
 // ── CONFIG ──
 export const CONFIG = {
   player: {
-    speed:          4,
+    speed:          5,
     shootCooldown:  0.25,
     spawnOffsetY:   80,
     bulletOffsetY:  20,
@@ -23,19 +23,35 @@ export const CONFIG = {
   },
   enemy: {
     baseSpeed:        1.5,
-    accel:            0.02,
+    accel:            0.008,   // acelereração da velocidade dos inimigos ao longo do tempo.
     spawnInterval:    2.0,
     spawnMin:         1.0,
-    spawnDecel:       0.008,
+    spawnDecel:       0.006,
     maxOnScreen:      8,
-    shootCooldownMin: 0.6,
-    shootCooldownMax: 1.4,
-    bulletSpeed:      190,
-    bulletSpeedMult:  60,
+    shootCooldown:    1.8,     // fixo o jogo todo
+    bulletBaseSpeed:  160,      // velocidade base da bala (proporcional a baseSpeed)
     spawnMarginX:     30,
     spawnOffsetY:     20,
     bulletOffsetY:    16,
     despawnOffsetY:   40,
+    groupSpawnAfter:  60,      // segundos para começar spawn em grupo
+    groupSpawnChance: 0.4,     // 40% de chance de spawnar em grupo
+  },
+  enemyMedium: {
+    hp:               3,
+    speedMult:        0.6,
+    shootCooldown:    2.4,  // fixo
+    bulletOffsetY:    20,
+    spawnAfter:       80,
+    scoreValue:       30,
+  },
+  enemyLarge: {
+    hp:               5,
+    speedMult:        0.4,
+    shootCooldown:    3.2,  // fixo
+    bulletOffsetY:    26,
+    spawnAfter:       120,
+    scoreValue:       60,
   },
   enemyBullet: {
     hitW:    4,
@@ -56,9 +72,9 @@ export const CONFIG = {
     count:     60,
     seedA: 137, seedB: 11,
     seedC:  97, seedD: 53,
-    largeMod:  3,
-    largeSize: 2,
-    smallSize: 1,
+    largeMod:  5,
+    largeSize: 4,
+    smallSize: 3,
   },
   loop: {
     maxDt: 0.05,
@@ -140,5 +156,30 @@ export const SPRITES = {
     [0,1,1,1,1,1,0],
     [0,0,1,1,1,0,0],
     [0,0,0,1,0,0,0],
+  ],
+  enemyMedium: [
+    [0,0,0,0,2,2,0,0,0,0],
+    [0,0,0,2,2,2,2,0,0,0],
+    [0,0,1,1,2,2,1,1,0,0],
+    [0,1,1,1,1,1,1,1,1,0],
+    [1,1,1,2,1,1,2,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,1,1,0,1,1],
+    [1,0,0,0,1,1,0,0,0,1],
+    [0,0,0,0,2,2,0,0,0,0],
+  ],
+  enemyLarge: [
+    [0,0,0,0,0,2,2,0,0,0,0,0],
+    [0,0,0,0,2,2,2,2,0,0,0,0],
+    [0,0,0,1,2,2,2,2,1,0,0,0],
+    [0,0,1,1,1,2,2,1,1,1,0,0],
+    [0,1,1,1,1,1,1,1,1,1,1,0],
+    [1,1,1,2,1,1,1,1,2,1,1,1],
+    [1,1,1,1,1,2,2,1,1,1,1,1],
+    [1,1,1,2,1,1,1,1,2,1,1,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1],
+    [0,1,1,0,1,1,1,1,0,1,1,0],
+    [0,1,0,0,0,2,2,0,0,0,1,0],
+    [0,0,0,0,0,2,2,0,0,0,0,0],
   ],
 };
