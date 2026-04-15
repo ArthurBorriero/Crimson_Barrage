@@ -64,8 +64,7 @@ function handleStart() {
     resetGame();
   }
 }
- 
-// ── COLISÕES ──
+
 // ── COLISÕES ──
 function updateCollisions() {
   const pw  = SPRITES_SIZE(CONFIG, 'player', 'w');
