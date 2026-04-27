@@ -1,6 +1,6 @@
 import { CANVAS, CONFIG, COLORS, SPRITES, SPRITE_SCALE } from './config.js';
 import { clamp } from './utils.js';
-import { getMoveDir, getTouchDelta, isShooting } from './input.js';
+import { getMoveDir, getTouch, isShooting } from './input.js';
 import { playShoot } from './audio.js';
 
 export function createPlayer() {
@@ -14,7 +14,7 @@ export function createPlayer() {
 
 export function updatePlayer(player, playerBullets, dt) {
   const dir   = getMoveDir();
-  const delta = getTouchDelta();
+  const touch = getTouch();
   const spd   = player.speed;
 
   // ── Movimento desktop ──
@@ -33,7 +33,6 @@ export function updatePlayer(player, playerBullets, dt) {
       player.x += (dx / dist) * s;
       player.y += (dy / dist) * s;
     }
-
   }
 
   // ── Clamp dentro da tela ──
