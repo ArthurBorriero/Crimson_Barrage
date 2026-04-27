@@ -1,12 +1,29 @@
 import { CANVAS, CONFIG } from './config.js';
 import { resumeAudio } from './audio.js';
 
-const keys      = {};
+// ── INPUT DESKTOP ──
+const keys = {};
+
+document.addEventListener('keydown', e => { keys[e.key] = true; });
+document.addEventListener('keyup',   e => { keys[e.key] = false; });
+
+export function getMoveDir() {
+  return {
+    left:  keys['ArrowLeft']  || keys['a'] || keys['A'],
+    right: keys['ArrowRight'] || keys['d'] || keys['D'],
+    up:    keys['ArrowUp']    || keys['w'] || keys['W'],
+    down:  keys['ArrowDown']  || keys['s'] || keys['S'],
+  };
+}
+
+export function isShooting() {
+  return keys['Enter'] || touch !== null;
+}
+
+// ── INPUT MOBILE ──
 let touch       = null;
-let touchHeld   = false; // dedo na tela sem arrastar = atirar
-let touchStart  = 0;
-let touchMoved  = false;
 let touchOrigin = { x: 0, y: 0 };
+let touchMoved  = false;
 
 function getTouchPos(t, canvas) {
   const rect   = canvas.getBoundingClientRect();
@@ -19,20 +36,18 @@ function getTouchPos(t, canvas) {
 }
 
 export function initInput(canvas, onStart) {
+  // Desktop — space para iniciar
   document.addEventListener('keydown', e => {
-    keys[e.key] = true;
     if (e.key === ' ') onStart();
   });
-  document.addEventListener('keyup', e => { keys[e.key] = false; });
 
+  // Mobile — touchstart sempre atualiza posição, mesmo sem tirar o dedo
   canvas.addEventListener('touchstart', e => {
     e.preventDefault();
     resumeAudio();
     const pos   = getTouchPos(e.touches[0], canvas);
     touchOrigin = pos;
-    touchStart  = Date.now();
     touchMoved  = false;
-    touchHeld   = true;
     touch       = pos;
     onStart();
   }, { passive: false });
@@ -43,8 +58,10 @@ export function initInput(canvas, onStart) {
     const dx  = pos.x - touchOrigin.x;
     const dy  = pos.y - touchOrigin.y;
     if (Math.sqrt(dx * dx + dy * dy) > CONFIG.input.movePx) {
-      touchMoved = true;
-      touchHeld  = false; // arrastar cancela o disparo
+      touchMoved  = true;
+      touchOrigin = pos; // atualiza origem para detectar quando parou
+    } else {
+      touchMoved = false; // dedo parou de mover
     }
     touch = pos;
   }, { passive: false });
@@ -52,23 +69,8 @@ export function initInput(canvas, onStart) {
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
     touch      = null;
-    touchHeld  = false;
     touchMoved = false;
   }, { passive: false });
-}
-
-// Retorna true se o disparo está ativo (tecla segurada ou toque estático)
-export function isShooting() {
-  return keys['Enter'] || touch !== null;
-}
-
-export function getMoveDir() {
-  return {
-    left:  keys['ArrowLeft']  || keys['a'] || keys['A'],
-    right: keys['ArrowRight'] || keys['d'] || keys['D'],
-    up:    keys['ArrowUp']    || keys['w'] || keys['W'],
-    down:  keys['ArrowDown']  || keys['s'] || keys['S'],
-  };
 }
 
 export function getTouch() { return touch; }
