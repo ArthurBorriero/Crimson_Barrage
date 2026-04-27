@@ -59,7 +59,7 @@ export function initInput(canvas, onStart) {
 
 // Retorna true se o disparo está ativo (tecla segurada ou toque estático)
 export function isShooting() {
-  return keys['Enter'] || touchHeld;
+  return keys['Enter'] || touch !== null;
 }
 
 export function getMoveDir() {
