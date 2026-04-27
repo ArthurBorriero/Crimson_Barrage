@@ -1,6 +1,6 @@
 import { CANVAS, CONFIG, COLORS, SPRITES, SPRITE_SCALE } from './config.js';
 import { clamp } from './utils.js';
-import { getMoveDir, getTouch, isShooting } from './input.js';
+import { getMoveDir, getTouchDelta, isShooting } from './input.js';
 import { playShoot } from './audio.js';
 
 export function createPlayer() {
@@ -14,30 +14,28 @@ export function createPlayer() {
 
 export function updatePlayer(player, playerBullets, dt) {
   const dir   = getMoveDir();
-  const touch = getTouch();
+  const delta = getTouchDelta();
   const spd   = player.speed;
 
+  // ── Movimento desktop ──
   if (dir.left)  player.x -= spd;
   if (dir.right) player.x += spd;
   if (dir.up)    player.y -= spd;
   if (dir.down)  player.y += spd;
 
-  if (touch) {
-    const dx   = touch.x - player.x;
-    const dy   = touch.y - player.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist > CONFIG.player.touchDeadzone) {
-      const s  = Math.min(spd * CONFIG.player.touchSpeedMult, dist);
-      player.x += (dx / dist) * s;
-      player.y += (dy / dist) * s;
-    }
+  // ── Movimento mobile (delta direcional normalizado) ──
+  if (delta.x !== 0 || delta.y !== 0) {
+    player.x += delta.x * spd;
+    player.y += delta.y * spd;
   }
 
+  // ── Clamp dentro da tela ──
   const hw = (SPRITES.player[0].length * SPRITE_SCALE) / 2;
   const hh = (SPRITES.player.length    * SPRITE_SCALE) / 2;
   player.x = clamp(player.x, hw, CANVAS.W - hw);
   player.y = clamp(player.y, hh, CANVAS.H - hh);
 
+  // ── Disparo ──
   player.shootCooldown -= dt;
   if (isShooting() && player.shootCooldown <= 0) {
     playerBullets.push({ x: player.x, y: player.y - CONFIG.player.bulletOffsetY });

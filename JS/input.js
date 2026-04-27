@@ -21,9 +21,9 @@ export function isShooting() {
 }
 
 // ── INPUT MOBILE ──
-let touch       = null;
-let touchOrigin = { x: 0, y: 0 };
-let touchMoved  = false;
+let touch        = null; // posição atual do dedo (para referência)
+let touchOrigin  = null; // ponto onde o dedo tocou
+let touchDelta   = { x: 0, y: 0 }; // direção normalizada do movimento
 
 function getTouchPos(t, canvas) {
   const rect   = canvas.getBoundingClientRect();
@@ -35,42 +35,45 @@ function getTouchPos(t, canvas) {
   };
 }
 
+function normalize(dx, dy) {
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len < CONFIG.input.movePx) return { x: 0, y: 0 }; // dentro da deadzone
+  return { x: dx / len, y: dy / len };
+}
+
 export function initInput(canvas, onStart) {
   // Desktop — space para iniciar
   document.addEventListener('keydown', e => {
     if (e.key === ' ') onStart();
   });
 
-  // Mobile — touchstart sempre atualiza posição, mesmo sem tirar o dedo
+  // Mobile
   canvas.addEventListener('touchstart', e => {
     e.preventDefault();
     resumeAudio();
-    const pos   = getTouchPos(e.touches[0], canvas);
+    const pos  = getTouchPos(e.touches[0], canvas);
     touchOrigin = pos;
-    touchMoved  = false;
     touch       = pos;
+    touchDelta  = { x: 0, y: 0 };
     onStart();
   }, { passive: false });
 
   canvas.addEventListener('touchmove', e => {
     e.preventDefault();
     const pos = getTouchPos(e.touches[0], canvas);
+    touch     = pos;
     const dx  = pos.x - touchOrigin.x;
     const dy  = pos.y - touchOrigin.y;
-    if (Math.sqrt(dx * dx + dy * dy) > CONFIG.input.movePx) {
-      touchMoved  = true;
-      touchOrigin = pos; // atualiza origem para detectar quando parou
-    } else {
-      touchMoved = false; // dedo parou de mover
-    }
-    touch = pos;
+    touchDelta = normalize(dx, dy);
   }, { passive: false });
 
   canvas.addEventListener('touchend', e => {
     e.preventDefault();
     touch      = null;
-    touchMoved = false;
+    touchOrigin = null;
+    touchDelta  = { x: 0, y: 0 };
   }, { passive: false });
 }
 
-export function getTouch() { return touch; }
+export function getTouchDelta() { return touchDelta; }
+export function getTouch()      { return touch; }
