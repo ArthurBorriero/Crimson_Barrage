@@ -33,7 +33,7 @@ export function updatePlayer(player, playerBullets, dt) {
       player.x += (dx / dist) * s;
       player.y += (dy / dist) * s;
     }
->>>>>>> 1f46939 (nave acima do dedo)
+
   }
 
   // ── Clamp dentro da tela ──
