@@ -11,6 +11,7 @@ export const CONFIG = {
     shootCooldown:  0.25,
     spawnOffsetY:   80,
     bulletOffsetY:  20,
+    touchOffsetY:   80, // É pra nave ficar a 80px do dedo, pra não atrapalhar a visão.
     touchDeadzone:  4,
     touchSpeedMult: 2,
   },

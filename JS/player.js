@@ -23,10 +23,17 @@ export function updatePlayer(player, playerBullets, dt) {
   if (dir.up)    player.y -= spd;
   if (dir.down)  player.y += spd;
 
-  // ── Movimento mobile (delta direcional normalizado) ──
-  if (delta.x !== 0 || delta.y !== 0) {
-    player.x += delta.x * spd;
-    player.y += delta.y * spd;
+  // ── Movimento mobile (nave segue o dedo com offset vertical) ──
+  if (touch) {
+    const dx   = touch.x - player.x;
+    const dy   = (touch.y - CONFIG.player.touchOffsetY) - player.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > CONFIG.player.touchDeadzone) {
+      const s  = Math.min(spd * CONFIG.player.touchSpeedMult, dist);
+      player.x += (dx / dist) * s;
+      player.y += (dy / dist) * s;
+    }
+>>>>>>> 1f46939 (nave acima do dedo)
   }
 
   // ── Clamp dentro da tela ──
