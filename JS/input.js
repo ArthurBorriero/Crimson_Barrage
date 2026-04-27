@@ -27,9 +27,9 @@ function getTouchPos(t, canvas) {
   const scaleX = CANVAS.W / rect.width;
   const scaleY = CANVAS.H / rect.height;
   return {
-    x: (t.clientX - rect.left) * scaleX,
-    y: (t.clientY - rect.top)  * scaleY,
-  };
+  x: (t.clientX - rect.left) * scaleX,
+  y: (t.clientY - rect.top)  * scaleY,
+};
 }
 
 export function initInput(canvas, onStart) {
