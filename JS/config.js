@@ -35,13 +35,13 @@ export const CONFIG = {
     spawnOffsetY:     20,
     bulletOffsetY:    16,
     despawnOffsetY:   40,
-    groupSpawnAfter:  60,      // segundos para começar spawn em grupo
-    groupSpawnChance: 0.4,     // 40% de chance de spawnar em grupo
+    groupSpawnAfter:  45,    // segundos para começar spawn em grupo
+    groupSpawnChance: 0.5,     // 50% de chance de spawnar em grupo
   },
   enemyMedium: {
     hp:               3,
     speedMult:        0.6,
-    shootCooldown:    2.4,  // fixo
+    shootCooldown:    2.0,// fixo
     bulletOffsetY:    20,
     spawnAfter:       80,
     scoreValue:       30,
